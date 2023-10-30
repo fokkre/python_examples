@@ -4,8 +4,6 @@ import random
 FOLDER = "data/"
 Filename = os.listdir(FOLDER)
 
-patientData = {}
-
 """
 The hospital sends over a list of patients and their results as a single csv file. There are 569 unique records indicating:
 1) ID number
@@ -29,6 +27,8 @@ j) fractal dimension ("coastline approximation" - 1)
 
 def get_results_by_id(request):
 
+    patientData = {}
+
     for file in Filename:
         data = []
         with open (FOLDER + file) as csvfile:
@@ -47,6 +47,8 @@ def get_results_by_id(request):
 
 def get_random_ids(record_request_count):
 
+    patientDataRandom = {}
+
     for file in Filename:
         data = []
         with open (FOLDER + file) as csvfile:
@@ -56,19 +58,23 @@ def get_random_ids(record_request_count):
                 results = data[line].strip().split(',')
                 id = results[0]
                 results.pop(0)
-                if id not in patientData:
-                    patientData[id] = [results]
-                patientData[id].append(results)
+                if id not in patientDataRandom:
+                    patientDataRandom[id] = [results]
+                patientDataRandom[id].append(results)
+    print(patientDataRandom)
 
     random_index = []
     random_records = []
     i = 0
 
     while i < record_request_count:
-        random_index.append(random.randrange(1,570))
+        random_index.append(random.randrange(1,len(patientDataRandom)))
         i+=1
 
     for index in random_index:
-        random_records.append(list(patientData.keys())[index])
+        random_records.append(list(patientDataRandom.keys())[index])
+
+    print(random_index)
+    print(random_records)
     
     return(random_records)
